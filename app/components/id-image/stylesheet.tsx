@@ -1,0 +1,86 @@
+import { StyleSheet } from 'react-native';
+
+const styles = StyleSheet.create({
+  wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  id: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    borderColor: '#27374A',
+    borderWidth: 6,
+    borderRadius: 10,
+    width: 450,
+    height: 270,
+  },
+  province: {
+    borderColor: '#27374A',
+    borderWidth: 6,
+    width: '80%',
+    height: 30,
+    marginTop: 15,
+  },
+  content: {
+    display: 'flex',
+    marginTop: 15,
+    width: '80%',
+  },
+  photo: {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#27374A',
+    borderWidth: 6,
+    height: 130,
+    width: 100,
+    overflow: 'hidden',
+  },
+  userHead: {
+    position: 'absolute',
+    top: 20,
+    width: 50,
+    height: 50,
+    borderColor: '#27374A',
+    borderWidth: 6,
+    borderRadius: 50,
+    backgroundColor: '#27374A',
+  },
+  userBody: {
+    position: 'absolute',
+    top: 75,
+    width: '80%',
+    height: '80%',
+    borderWidth: 6,
+    borderColor: '#27374A',
+    borderRadius: 50,
+    backgroundColor: '#27374A',
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 15,
+    borderTopWidth: 6,
+    borderTopColor: '#27374A',
+    height: 140,
+  },
+  text: {
+    marginTop:15,
+    height: 15,
+    width: '60%',
+    borderTopWidth: 6,
+    borderTopColor: '#27374A',
+    borderBottomWidth: 6,
+    borderBottomColor: '#27374A',
+  },
+  dottedText: {
+    borderTopWidth: 6,
+    borderTopColor: '#27374A',
+    borderStyle:  'dotted',
+    marginTop: 15,
+  },
+});
+
+export default styles;
