@@ -4,6 +4,7 @@ import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import styles from './barcode-scanner-styles';
 import CameraDenied from '../../components/camera-denied';
+import { string } from 'prop-types';
 
 export default class BarcodeScanner extends React.Component {
   constructor(props) {
@@ -49,8 +50,65 @@ export default class BarcodeScanner extends React.Component {
 
   handleBarCodeScanned = ({ type, data }) => {
     this.setState({ scanned: true });
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
+    if (type === 'org.iso.PDF417') {
+      this.handlePDF417(data);
+    }
   };
+
+  handlePDF417 = (PDF417: string) => {
+    alert(`data ${PDF417} has been scanned!`);
+    console.log(`data ${PDF417} has been scanned!`);
+    const dataArray = PDF417.split('?');
+    const basicInfo = this.getBasicInfo(dataArray[0]); 
+
+    const detailedInfo = this.getDetailedInfo(dataArray[2]);
+
+  };
+
+  getDetailedInfo(detailedInfo: string) {
+    const details = {
+      sex: null,
+      weight: null,
+      eyeColor: null,
+      hairColor: null,
+      PHN: null,
+    };
+  }
+
+  getBasicInfo(basicInfo: string) {
+    const details = {
+      zip: null,
+      address: null,
+      province: null,
+      city: null,
+      firstName: null,
+      middleName: null,
+      lastName: null,
+    };
+
+    const basicInfoArray = basicInfo.split('^');
+    let name = basicInfoArray[1].split(',');
+    details.lastName = name[0];
+    let firstNames = name[1].split(' ');
+    details.firstName = firstNames[0].slice(1);
+    details.middleName = firstNames[1];
+    
+    let addressDetails: any = basicInfoArray[2];
+    details.zip = addressDetails.slice(addressDetails.length - 7);
+    addressDetails = addressDetails.slice(0, addressDetails.length - 7).trim();
+    addressDetails = addressDetails.split('$');
+    details.address = addressDetails[0];
+    details.province = addressDetails[1].slice(-2);
+    details.city = addressDetails[1].slice(0, -2);
+
+    console.log('details', details)
+    console.log('basicInfoArray', basicInfoArray)
+    console.log('name', name, 'addressDetails', addressDetails)
+    return details;
+  }
+
+ 
 
   // getPermissionDeniedElement() {
   //   return (
@@ -69,4 +127,39 @@ export default class BarcodeScanner extends React.Component {
   //     </View>
   //   );
   // }
+}
+
+
+
+
+function getBasicInfo (basicInfo) {
+  const details = {
+    zip: null,
+    address: null,
+    province: null,
+    city: null,
+    firstName: null,
+    middleName: null,
+    lastName: null,
+  };
+
+  const basicInfoArray = basicInfo.split('^');
+  let name = basicInfoArray[1].split(',');
+	details.lastName = name[0];
+	let firstNames = name[1].split(' ');
+	details.firstName = firstNames[0].slice(1);
+  details.middleName = firstNames[1];
+  
+  let addressDetails = basicInfoArray[2];
+  details.zip = addressDetails.slice(addressDetails.length - 7);
+  addressDetails = addressDetails.slice(0, addressDetails.length - 7).trim();
+  addressDetails = addressDetails.split('$');
+  details.address = addressDetails[0];
+  details.province = addressDetails[1].slice(-2);
+  details.city = addressDetails[1].slice(0, -2);
+
+  console.log('details', details)
+  console.log('basicInfoArray', basicInfoArray)
+  console.log('name', name, 'addressDetails', addressDetails)
+  return details;
 }
