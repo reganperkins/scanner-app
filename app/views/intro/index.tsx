@@ -5,6 +5,7 @@ import IDImage from '../../components/id-image';
 
 export default class IntroPage extends React.Component {
   render() {
+    console.log(this.props)
     return (
       <View style={styles.container}>
         <IDImage />
@@ -14,7 +15,7 @@ export default class IntroPage extends React.Component {
           <Text style={styles.tagline}>our quick and handy ID scanner</Text>
         </View>
         
-        <TouchableOpacity onPress={() => true} style={styles.startBtn}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Scanner')} style={styles.startBtn}>
           <Text style={styles.btnText}>Get Started</Text>
         </TouchableOpacity>
       </View>
