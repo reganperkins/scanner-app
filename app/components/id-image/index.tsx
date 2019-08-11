@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import styles from './stylesheet';
+import styles from './id-image-styles';
+import HorizontalDashedLine from '../dashed-line';
 
 
-const IntroPage = () => {
+const IDImage = () => {
  return (
     <View style={styles.wrapper}>
       <View style={styles.id}>
@@ -17,7 +18,7 @@ const IntroPage = () => {
             <View style={styles.text}></View>
             <View style={styles.text}></View>
             <View style={styles.text}></View>
-            <View style={styles.dottedText}></View>
+            <HorizontalDashedLine width="100" />
           </View>
         </View>
       </View>
@@ -25,4 +26,4 @@ const IntroPage = () => {
  )
 };
 
-export default IntroPage;
+export default IDImage;

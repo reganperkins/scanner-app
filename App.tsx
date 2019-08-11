@@ -1,21 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import IntroPage from './app/components/id-image/id-image';
+import IntroPage from './app/views/intro';
+import BarcodeScanner from './app/views/barcode-scanner';
+import { createStackNavigator, createAppContainer } from "react-navigation";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Your app!</Text>
-      <IntroPage />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const AppNavigator = createStackNavigator({
+  Intro: {
+    screen: IntroPage,
   },
+  Scanner: {
+    screen: BarcodeScanner,
+  },
+}, {
+    initialRouteName: 'Intro',
 });
+
+const AppContainer = createAppContainer(AppNavigator);
+
+export default class App extends React.Component {
+  render() {
+    return <AppContainer />;
+  }
+}
