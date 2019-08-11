@@ -66,17 +66,29 @@ export default class BarcodeScanner extends React.Component {
 
   };
 
-  getDetailedInfo(detailedInfo: string) {
+  getDetailedInfo(text: string) {
     const details = {
       sex: null,
       weight: null,
+      height: null,
       eyeColor: null,
       hairColor: null,
       PHN: null,
     };
+
+    let detailedInfo: Array<String> = text.replace(/  +/g, ' ').split(' ');
+    details.sex = detailedInfo[1][0];
+    details.height = `${detailedInfo[1].slice(1)}cm`;
+    details.weight = `${detailedInfo[2].match(/^\d+/g)[0]}kg`;
+    detailedInfo[2] = detailedInfo[2].slice(details.weight.length);
+    details.hairColor = detailedInfo[2].slice(0, 3);
+    details.eyeColor = detailedInfo[2].slice(3, 6);
+    details.PHN = detailedInfo[2].slice(6);
+
+    return details;
   }
 
-  getBasicInfo(basicInfo: string) {
+  getBasicInfo(text: string) {
     const details = {
       zip: null,
       address: null,
@@ -87,14 +99,14 @@ export default class BarcodeScanner extends React.Component {
       lastName: null,
     };
 
-    const basicInfoArray = basicInfo.split('^');
-    let name = basicInfoArray[1].split(',');
-    details.lastName = name[0];
+    const basicInfo: Array<String> = text.split('^');
+    let name = basicInfo[1].split(',');
     let firstNames = name[1].split(' ');
     details.firstName = firstNames[0].slice(1);
     details.middleName = firstNames[1];
+    details.lastName = name[0];
     
-    let addressDetails: any = basicInfoArray[2];
+    let addressDetails: any = basicInfo[2];
     details.zip = addressDetails.slice(addressDetails.length - 7);
     addressDetails = addressDetails.slice(0, addressDetails.length - 7).trim();
     addressDetails = addressDetails.split('$');
@@ -102,64 +114,11 @@ export default class BarcodeScanner extends React.Component {
     details.province = addressDetails[1].slice(-2);
     details.city = addressDetails[1].slice(0, -2);
 
-    console.log('details', details)
-    console.log('basicInfoArray', basicInfoArray)
-    console.log('name', name, 'addressDetails', addressDetails)
     return details;
   }
 
  
+  //  Bar code with type org.iso.PDF417
+  //  data %BCVANCOUVER^LITTLE,$MATTHEW COLIN^101-1422 3RD AVE E$VANCOUVER BC  V5N 5R5^?;6360287447162=220519850520=?_%0AV5N5R5                     M178 75BRNGRN9015103477                A%  K/WNNBB?
 
-  // getPermissionDeniedElement() {
-  //   return (
-  //     <View style={styles.deniedWrapper}>
-  //       <Text style={styles.heading}>Camera access was denied</Text>
-  //       <Text style={styles.text}>This scanner app requires access to the camera. If you wish to continue please follow these steps:</Text>
-  //       <View style={styles.list}>
-  //         <Text style={styles.text}>1. Close the app</Text>
-  //         <Text style={styles.text}>2. Open Settings</Text>
-  //         <Text style={styles.text}>3. Find and click on Scanner app</Text>
-  //         <Text style={styles.text}>4. Toggle the camera permissions</Text>
-  //       </View>
-  //       <TouchableOpacity onPress={() => this.props.navigation.goBack()} style={styles.backBtn}>
-  //         <Text style={styles.btnText}>Back</Text>
-  //       </TouchableOpacity>
-  //     </View>
-  //   );
-  // }
-}
-
-
-
-
-function getBasicInfo (basicInfo) {
-  const details = {
-    zip: null,
-    address: null,
-    province: null,
-    city: null,
-    firstName: null,
-    middleName: null,
-    lastName: null,
-  };
-
-  const basicInfoArray = basicInfo.split('^');
-  let name = basicInfoArray[1].split(',');
-	details.lastName = name[0];
-	let firstNames = name[1].split(' ');
-	details.firstName = firstNames[0].slice(1);
-  details.middleName = firstNames[1];
-  
-  let addressDetails = basicInfoArray[2];
-  details.zip = addressDetails.slice(addressDetails.length - 7);
-  addressDetails = addressDetails.slice(0, addressDetails.length - 7).trim();
-  addressDetails = addressDetails.split('$');
-  details.address = addressDetails[0];
-  details.province = addressDetails[1].slice(-2);
-  details.city = addressDetails[1].slice(0, -2);
-
-  console.log('details', details)
-  console.log('basicInfoArray', basicInfoArray)
-  console.log('name', name, 'addressDetails', addressDetails)
-  return details;
 }
