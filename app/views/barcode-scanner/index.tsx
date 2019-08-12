@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Alert, StyleSheet } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import styles from './barcode-scanner-styles';
@@ -72,9 +72,24 @@ export default class BarcodeScanner extends React.Component<Props, State> {
   handleBarCodeScanned = ({ type, data }) => {
     this.setState({ scanned: true });
     if (type === 'org.iso.PDF417') {
+      if (data[0] !== '%' || data[data.length - 1] !== '?') {
+        return this.unreadableBarcodeString();
+      }
       this.handlePDF417(data);
     }
   };
+
+  unreadableBarcodeString() {
+    Alert.alert(
+      'Warning',
+      'This does not appear to be a Canadian id. Other formats are not accepted at this time.',
+      [
+        { text: 'Go Back', onPress: () => this.props.navigation.goBack() },
+        { text: 'OK', onPress: () => this.setState({ scanned: false }) },
+      ],
+      {cancelable: false},
+    );
+  }
 
   handlePDF417 = (PDF417: string) => {
     const dataArray = PDF417.split('?');
@@ -110,13 +125,13 @@ export default class BarcodeScanner extends React.Component<Props, State> {
 
   getBasicInfo(text: string) {
     const details = {
-      zip: null,
-      address: null,
-      province: null,
-      city: null,
       firstName: null,
       middleName: null,
       lastName: null,
+      address: null,
+      province: null,
+      city: null,
+      zip: null,
     };
 
     const basicInfo: Array<String> = text.split('^');
