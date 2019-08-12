@@ -1,29 +1,27 @@
 import * as React from 'react';
 import styles from './id-details-styles';
 import { View, Text } from 'react-native';
+import {
+  NavigationParams,
+  NavigationState,
+  NavigationScreenProp,
+} from 'react-navigation';
 
-export default class IntroPage extends React.Component {
+interface Props {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+};
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.heading}>Results</Text>
-        <View style={styles.table}>
-          { this.getRows() }
-        </View>
-      </View>
-    );
-  }
+const IdDetails = (props: Props) => {
 
-  getRows() {
-    const paramDataPairs = Object.entries(this.props.navigation.state.params);
+  function getRows() {
+    const paramDataPairs = Object.entries(props.navigation.state.params);
     const rowElements = paramDataPairs.map((entry) => {
-      return this.renderRow(entry[0], entry[1]);
+      return renderRow(entry[0], entry[1]);
     });
     return rowElements;
   }
 
-  renderRow(identifier, content) {
+  function renderRow(identifier, content) {
     if (!content) return;
     return (
       <View style={styles.row} key={identifier}>
@@ -36,4 +34,15 @@ export default class IntroPage extends React.Component {
         </View>
     );
   }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.heading}>Results</Text>
+      <View style={styles.table}>
+        { getRows() }
+      </View>
+    </View>
+  );
 }
+
+export default IdDetails;

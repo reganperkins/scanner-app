@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import styles from './camera-denied-styles';
+import { withNavigation } from 'react-navigation';
 
 const cameraDenied = (props) => {
   return (
@@ -20,4 +21,4 @@ const cameraDenied = (props) => {
   );
 };
 
-export default cameraDenied;
+export default withNavigation(cameraDenied);

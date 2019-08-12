@@ -1,9 +1,13 @@
 import React from 'react';
 import Svg, { Line } from 'react-native-svg';
 
-const HorizontalDashedLine = (props) => {
+interface Props {
+  width: string,
+}
+
+const HorizontalDottedLine = (props: Props) => {
   return (
-    <Svg height={100} width={100} >
+    <Svg height={100} width={props.width} >
       <Line
         stroke="black"
         strokeDasharray="[3, 10]"
@@ -18,4 +22,4 @@ const HorizontalDashedLine = (props) => {
   );
 }
 
-export default HorizontalDashedLine;
+export default HorizontalDottedLine;

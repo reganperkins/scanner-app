@@ -37,7 +37,7 @@ export default class BarcodeScanner extends React.Component<Props, State> {
       return <Text>Requesting camera permission</Text>;
     }
     if (hasCameraPermission === false) {
-      return <CameraDenied navigation={this.props.navigation} />;
+      return <CameraDenied />;
     }
     return (
       <View style={styles.mainWrapper}>
@@ -134,6 +134,4 @@ export default class BarcodeScanner extends React.Component<Props, State> {
 
     return details;
   }
-
-
 }
