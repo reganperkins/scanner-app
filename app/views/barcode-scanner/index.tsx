@@ -4,9 +4,22 @@ import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import styles from './barcode-scanner-styles';
 import CameraDenied from '../../components/camera-denied';
-import { string } from 'prop-types';
+import {
+  NavigationParams,
+  NavigationScreenProp,
+  NavigationState,
+} from 'react-navigation';
 
-export default class BarcodeScanner extends React.Component {
+interface Props {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>
+};
+
+interface State {
+  hasCameraPermission?: boolean,
+  scanned: boolean
+};
+
+export default class BarcodeScanner extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +27,8 @@ export default class BarcodeScanner extends React.Component {
       scanned: false,
     };
   }
+
+  helpTimer = null;
 
   render() {
     const { hasCameraPermission, scanned } = this.state;
@@ -30,17 +45,22 @@ export default class BarcodeScanner extends React.Component {
           onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
         />
-
-        {/* scanned && (
-          <Button title={'Tap to Scan Again'} onPress={() => this.setState({ scanned: false })} />
-        ) */}
-
       </View>
     );
   }
 
   async componentDidMount() {
     this.getPermissionsAsync();
+    const openHelpAlert = this.openHelpAlert;
+    this.helpTimer = setTimeout(openHelpAlert, 30000);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.helpTimer);
+  }
+
+  openHelpAlert() {
+    alert('If you are having issues scanning your ID try moving somewhere with natural light or tilting the card.');
   }
 
   getPermissionsAsync = async () => {
@@ -50,20 +70,18 @@ export default class BarcodeScanner extends React.Component {
 
   handleBarCodeScanned = ({ type, data }) => {
     this.setState({ scanned: true });
-    console.log(`Bar code with type ${type} and data ${data} has been scanned!`);
     if (type === 'org.iso.PDF417') {
       this.handlePDF417(data);
     }
   };
 
   handlePDF417 = (PDF417: string) => {
-    alert(`data ${PDF417} has been scanned!`);
-    console.log(`data ${PDF417} has been scanned!`);
     const dataArray = PDF417.split('?');
     const basicInfo = this.getBasicInfo(dataArray[0]); 
-
     const detailedInfo = this.getDetailedInfo(dataArray[2]);
 
+    const details = Object.assign({}, basicInfo, detailedInfo);
+    this.props.navigation.replace('Details', details);
   };
 
   getDetailedInfo(text: string) {
@@ -117,8 +135,5 @@ export default class BarcodeScanner extends React.Component {
     return details;
   }
 
- 
-  //  Bar code with type org.iso.PDF417
-  //  data %BCVANCOUVER^LITTLE,$MATTHEW COLIN^101-1422 3RD AVE E$VANCOUVER BC  V5N 5R5^?;6360287447162=220519850520=?_%0AV5N5R5                     M178 75BRNGRN9015103477                A%  K/WNNBB?
 
 }

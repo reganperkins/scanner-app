@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import styles from './id-image-styles';
-import HorizontalDashedLine from '../dashed-line';
+import HorizontalDashedLine from '../dotted-line';
 
 
 const IDImage = () => {

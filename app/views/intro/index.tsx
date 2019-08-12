@@ -4,8 +4,9 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import IDImage from '../../components/id-image';
 
 export default class IntroPage extends React.Component {
+  static navigationOptions = { header: null };
+  
   render() {
-    console.log(this.props)
     return (
       <View style={styles.container}>
         <IDImage />
