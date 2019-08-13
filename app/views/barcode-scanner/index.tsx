@@ -21,7 +21,7 @@ interface State {
 };
 
 export default class BarcodeScanner extends React.Component<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       hasCameraPermission: null,
@@ -76,6 +76,8 @@ export default class BarcodeScanner extends React.Component<Props, State> {
         return this.unreadableBarcodeString();
       }
       this.handlePDF417(data);
+    } else{
+      this.unreadableBarcodeString();
     }
   };
 
@@ -110,15 +112,42 @@ export default class BarcodeScanner extends React.Component<Props, State> {
       PHN: null,
     };
 
-    let detailedInfo: Array<String> = text.replace(/  +/g, ' ').split(' ');
-    details.sex = sex[detailedInfo[1][0]];
-    details.height = `${detailedInfo[1].slice(1)}cm`;
-    const weight = detailedInfo[2].match(/^\d+/g)[0];
-    detailedInfo[2] = detailedInfo[2].slice(weight.length);
+    let cardDetails: Array<String> = text.replace(/  +/g, ' ').split(' ');
+    if (cardDetails[1].length === 1) {
+      return this.getCareCardDetails(cardDetails);
+    }
+
+    return this.getDriversLicenceDetails(cardDetails);
+  }
+
+  getCareCardDetails(cardDetails) {
+    const details = {
+      sex: null,
+      PHN: null
+    }
+    details.sex = sex[cardDetails[1]];
+    details.PHN = cardDetails[2];
+
+    return details;
+  }
+  getDriversLicenceDetails(cardDetails) {
+    const details = {
+      sex: null,
+      weight: null,
+      height: null,
+      eyeColor: null,
+      hairColor: null,
+      PHN: null,
+    };
+
+    details.sex = sex[cardDetails[1][0]];
+    details.height = `${cardDetails[1].slice(1)}cm`;
+    const weight = cardDetails[2].match(/^\d+/g)[0];
+    cardDetails[2] = cardDetails[2].slice(weight.length);
     details.weight = `${weight}kg`;
-    details.hairColor = color[detailedInfo[2].slice(0, 3)] || detailedInfo[2].slice(0, 3);
-    details.eyeColor = color[detailedInfo[2].slice(3, 6)] || detailedInfo[2].slice(3, 6);
-    details.PHN = detailedInfo[2].slice(6);
+    details.hairColor = color[cardDetails[2].slice(0, 3)] || cardDetails[2].slice(0, 3);
+    details.eyeColor = color[cardDetails[2].slice(3, 6)] || cardDetails[2].slice(3, 6);
+    details.PHN = cardDetails[2].slice(6);
 
     return details;
   }

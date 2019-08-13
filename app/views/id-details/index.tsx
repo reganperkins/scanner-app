@@ -13,6 +13,10 @@ interface Props {
 
 const IdDetails = (props: Props) => {
 
+  function splitCamelCase(string: string) {
+    return string.replace(/([a-zA-Z])(?=[A-Z])/g, '$1 ').toLowerCase();
+  }
+
   function getRows() {
     const paramDataPairs = Object.entries(props.navigation.state.params);
     const rowElements = paramDataPairs.map((entry) => {
@@ -21,8 +25,11 @@ const IdDetails = (props: Props) => {
     return rowElements;
   }
 
-  function renderRow(identifier, content) {
+  function renderRow(identifier: string, content: string) {
     if (!content) return;
+    if (identifier !== 'PHN') {
+      identifier = splitCamelCase(identifier);
+    }
     return (
       <View style={styles.row} key={identifier}>
           <View style={styles.identifier}>

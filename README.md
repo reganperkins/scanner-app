@@ -10,3 +10,6 @@ This app uses Typescript, React Navigation and Expo.
 - connect your phone to the same wireless network as your computer
 - `npm start`
 - use the Expo app to scan the QR code from your terminal
+
+## To do
+add @ ANSI support for Ontario Licenses
